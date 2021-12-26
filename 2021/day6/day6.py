@@ -1,55 +1,32 @@
 
+
 input_file = "/home/looten/workspace/advent_of_code/2021/day6/input.txt"
 #input_file = "/home/looten/workspace/advent_of_code/2021/day6/test_data.txt"
-import threading
-
-class LanternFish:
-    next_lantern = 0
-
-    def __init__(self, new_fish, start_state=6):
-        self.next_lantern = start_state
-        if new_fish:
-            self.next_lantern += 2
-
-    def count_down(self):
-        self.next_lantern -= 1
-
-    def check_status(self):
-        if self.next_lantern == 0:
-            self.next_lantern = 6
-            return True
-        return False
 
 
 def create_lanterns(init_state):
     list_lanterns = []
-    for start_state in init_state:
-        fish = LanternFish(False, start_state)
-        list_lanterns.append(fish)
+    for i in range(9):
+        list_lanterns.append({i: init_state.count(i)})
     return list_lanterns
 
 
 def pass_day(list_lanterns):
-    new_list = []
-    import time
+    prev = list_lanterns[0][0]
+    tmp = -1
+    for i in range(8, 0, -1):
+        if tmp == -1:
+            tmp = list_lanterns[i-1][i-1]
+            list_lanterns[i-1][i-1] = list_lanterns[i][i]
+            list_lanterns[i][i] = 0
+        else:
+            bckp = tmp
+            tmp = list_lanterns[i-1][i-1]
+            list_lanterns[i-1][i-1] = bckp
 
-    start_time = time.time()
-    for fish in list_lanterns:
-        if fish.check_status():
-            new_fish = LanternFish(True)
-            new_list.append(new_fish)
-            continue
-        fish.count_down()
-
-    time2 =  time.time() - start_time
-    print(f"time to count {time2}" )
-    
-    start_time = time.time()
-    for fish in new_list:
-        list_lanterns.append(fish)
-
-    time2 =  time.time() - start_time
-    print(f"time to add {time2}" )
+    if prev > 0:
+        list_lanterns[8][8] += prev
+        list_lanterns[6][6] += prev
 
     return list_lanterns
 
@@ -64,18 +41,19 @@ def read_input():
     return init_state
 
 
-def print_status(df):
-    i, row = df.iterrows()
-    print(f"Size {row.size}")
+def print_status(list_lanterns):
+    tmp = 0
+    for i in range(0, 9):
+        tmp += list_lanterns[i][i]
+    print("Amount of fish", tmp, "\n")
 
 
 if __name__ == "__main__":
     init_state = read_input()
-    days = 80
-    print(f"Initial state: {init_state}")
+    days = 256
     list_lanterns = create_lanterns(init_state)
-
+    print(list_lanterns)
     for day in range(1, days+1):
-        print(f"After {day}")
         list_lanterns = pass_day(list_lanterns)
-        print("Amount of fish",len(list_lanterns), "\n")
+        print(f"After Day {day}")
+        print_status(list_lanterns)
