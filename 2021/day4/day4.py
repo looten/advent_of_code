@@ -1,5 +1,6 @@
 
-filename = "/home/looten/workspace/advent_of_code/2021/day4/input.txt"
+filename = "/home/looten/workspace/advent_of_code/2021/day4/test_data.txt"
+#filename = "/home/looten/workspace/advent_of_code/2021/day4/input.txt"
 
 def readfile():
     draw_order = []
@@ -12,57 +13,47 @@ def readfile():
 
         games_cnt = 0
         game = []
+        idx = 0
+
         for line in lines[1:]:
+            line = line.replace("\n", "")
+            if not line:
+                continue
+
             data = str(line.strip()).split(" ")
-
             row = {}
-            idx = 0
-
             for d in data:
                 if str(d):
-                    row[int(d)] =idx
-                    idx += 1
+                    row[int(d)] = ""
 
-            if len(row) > 0:
-                game.append(row)
-                if len(game) == 5:
-                    game.append({"draws": []})
-                    guess_list.append(game)
-                    game = []
-                    
+
+            game.append(row)
+            if len(game) == 5:
+                guess_list.append(game)
+                game = []
+                idx += 1
+                        
 
     return draw_order, guess_list
 
 def draw_nr(draw_order, guess_list):
-    draws = []
+    print("Starting to draw")
     for draw in draw_order:
-        draws.append(draw)
-        draws.sort()
         call_draw(draw, guess_list)
-
-        #if len(draws) % 5 == 0:
-        print(f"new draw {draws}")
-
         print_guess(guess_list)
-        input("asda")
-
         check_for_winner(guess_list)
 
 def print_guess(guess_list):
-    for data in guess_list:
-        print(f"\n")
-        for d in data:
+    for i in range(len(guess_list)):
+        print(f"game {i}")
+        for d in guess_list[i]:
             print(f" {d}")
-            #print(f"{k} : {v}")
 
 def call_draw(draw, guess_list):
     for game in guess_list:
-        for data in game[:4]:
-            try:
-                col = data[draw]
-                game[5]['draws'].append(draw)
-            except KeyError:
-                pass
+        for data in game:
+            if draw in data:
+                data[draw] = 'x'
 
 def check_for_winner(guess_list):
     for game in guess_list:
@@ -70,7 +61,6 @@ def check_for_winner(guess_list):
         if winner:
             for d in game:
                 print(f" {d}")
-                #print(f"{k} : {v}")
             input("WINNER")
             exit(0)
 
@@ -157,6 +147,8 @@ def check_col_win(tmp):
 
 if __name__ == "__main__":
     draw_order, guess_list = readfile()
+    print("start guess")
+    print_guess(guess_list)
     draw_nr(draw_order, guess_list)
     #print(draw_order)
     #print(guess_list)
