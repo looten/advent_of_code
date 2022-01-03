@@ -16,17 +16,15 @@ def read_file():
     return data
 
 
-def calc_adjacent(data: list):
+def find_low_points(data: list):
     low_points = []
     # indexes from prev
     curr_dict = {}
     prev_dict = {}
     kept_last = 0
     for i in range(len(data)):
-        #print(f"----------ROW {i}---------------")
         prev_low = 10
         for j in range(len(data[i])):
-            #print("\nVALUE", data[i][j], "",j)
 
             # Needed if for the case:
             # 4343 <- first 3 added to prev
@@ -37,7 +35,7 @@ def calc_adjacent(data: list):
                     prev_dict.pop(j)
             except KeyError:
                 pass
-         
+
             if data[i][j] <= prev_low and j+1 != len(data[i]):
                 prev_low = data[i][j]
             elif data[i][j] <= prev_low and j+1 == len(data[i]):
@@ -46,7 +44,6 @@ def calc_adjacent(data: list):
                     #print(f"SKIP {data[i][j]} SINCE ABOVE ROW")
                     continue
                 elif data[i][j-1] == data[i][j]:
-                    #print(f"SKIP prev {data[i][j]} == {data[i][j-1]}")
                     continue
                 elif data[i][j-1] < data[i][j]:
                     continue
@@ -88,11 +85,55 @@ def calc_adjacent(data: list):
     return low_points
 
 
-def print_low_points(data : list, low_points: list):
+def find_basins(data: list, low_points: list):
     low_points.pop(0)
+    basins = []
+    sizes = []
+    for i in range(len(data)):
+        for j in range(100):
+            if j in low_points[i]:
+                size = [0]
+                basin_search(low_points[i][j], data, i, j, basins, size)
+                sizes.append(size[0])
+    sizes.sort()
+    return basins, sizes
+
+
+def basin_search(start_val: int, data: list, row: int, col: int, basins: list, size: list):
+    # north neighbour
+    if row-1 >= 0 and data[row-1][col] != 9:
+        if not (row-1, col) in basins:
+            basins.append((row-1, col))
+            size[0] += 1
+            basin_search(data[row-1][col], data, row-1, col, basins, size)
+
+    # east neighbour
+    if col+1 <= 99 and data[row][col+1] != 9:
+        if not (row, col+1) in basins:
+            basins.append((row, col+1))
+            size[0] += 1
+            basin_search(data[row][col+1], data, row, col+1, basins, size)
+
+    # south neighbour
+    if row+1 <= 99 and data[row+1][col] != 9:
+        if not (row+1, col) in basins:
+            basins.append((row+1, col))
+            size[0] += 1
+            basin_search(data[row+1][col], data, row+1, col, basins, size)
+
+    # west neighbour
+    if col-1 >= 0 and data[row][col-1] != 9:
+        if not (row, col-1) in basins:
+            basins.append((row, col-1))
+            size[0] += 1
+            basin_search(data[row][col-1], data, row, col-1, basins, size)
+
+
+def print_low_points(data: list, low_points: list, basins: list):
     BOLD = '\033[1m'
     GREEN = '\033[92m'
     END = '\033[0m'
+    YELLOW = '\033[93m'
     sum_list = []
     for i in range(len(data)):
         sum_row = 0
@@ -100,26 +141,38 @@ def print_low_points(data : list, low_points: list):
         row = ""
         for j in range(100):
             if j in low_points[i]:
-                sum_row +=1
+                sum_row += 1
                 row += GREEN + BOLD + str(low_points[i][j]) + END
+            elif (i, j) in basins:
+                row += YELLOW + BOLD + str(data[i][j]) + END
             else:
                 row += str(data[i][j])
         print(f"{start:<4}{row:>100}")
         sum_list.append(sum_row)
 
+
 def calc(low_points: list):
     tot = 0
     for data in low_points:
-        #print(data)
         for k, v in data.items():
             tot += v + 1
     print("final sum", tot)
 
 
+def calc_basin(sizes: list):
+    tot = 1
+    tmp = sizes[len(sizes)-3:]
+    for data in tmp:
+        tot *= data
+        print(data)
+    print("basin value ", tot)
+
 
 if __name__ == "__main__":
     data = read_file()
-    low_points = calc_adjacent(data)
-    print_low_points(data, low_points)
-    calc(low_points)
+    low_points = find_low_points(data)
+    basins, sizes = find_basins(data, low_points)
+    print_low_points(data, low_points, basins)
 
+    calc_basin(sizes)
+    calc(low_points)
