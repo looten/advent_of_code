@@ -8,7 +8,6 @@ def read_input():
     data = []
     with open(input_file) as f:
         lines = f.readlines()
-        # print(lines)
         for line in lines:
             line = line.replace("\n", "")
             row = []
@@ -29,10 +28,11 @@ def run_steps(steps: int, data: list):
     print(f"Flashes: {flashes}")
 
 
-def print_data(data: list, flashes : int):
+def print_data(data: list, flashes: int):
     BOLD = '\033[1m'
     GREEN = '\033[92m'
     END = '\033[0m'
+
     curr_flashes = 0
     for row in data:
         #tmp = [BOLD + GREEN + str(i)+ END if i == 0 else str(i) for i in row]
@@ -46,6 +46,7 @@ def print_data(data: list, flashes : int):
     if curr_flashes == len(data) * len(data[0]):
         print("ALL FLASH", curr_flashes)
         input()
+
     return flashes
 
 
@@ -53,7 +54,7 @@ def calc_flash(data: list):
     return [[d + 1 for d in row] for row in data]
 
 
-def calc(data: list, row : int, col : int):
+def calc(data: list, row: int, col: int):
     if row < 0 or col < 0:
         print("hmm")
         exit()
@@ -63,38 +64,34 @@ def calc(data: list, row : int, col : int):
         data[row][col] = 0
         flash_eval(data, row, col)
 
+
 def flash_eval(data: list, row: int, col: int):
     # North west
     if row == 0 and col == 0:
-        #print("NW")
         calc(data, row, col+1)
         calc(data, row+1, col+1)
         calc(data, row+1, col)
 
     # North east
     if row == 0 and col == len(data[0])-1:
-        #print("NE")
         calc(data, row+1, col)
         calc(data, row+1, col-1)
         calc(data, row, col-1)
 
     # South east
     if row == len(data)-1 and col == len(data[0])-1:
-        #print("SE")
         calc(data, row-1, col)
         calc(data, row, col-1)
         calc(data, row-1, col-1)
 
     # South west
     if row == len(data)-1 and col == 0:
-        #print("SW")
         calc(data, row-1, col)
         calc(data, row-1, col+1)
         calc(data, row, col+1)
 
     # Top row
     if row == 0 and (col > 0 and col < len(data[0])-1):
-        #print("TOP ROW")
         calc(data, row, col+1)
         calc(data, row+1, col+1)
         calc(data, row+1, col)
@@ -103,7 +100,6 @@ def flash_eval(data: list, row: int, col: int):
 
     # Bottom row
     if row == len(data)-1 and (col > 0 and col < len(data[0])-1):
-        #print("BOT ROW")
         calc(data, row-1, col)
         calc(data, row-1, col+1)
         calc(data, row, col+1)
@@ -112,7 +108,6 @@ def flash_eval(data: list, row: int, col: int):
 
     # First col
     if (row > 0 and row < len(data)-1) and col == 0:
-        #print("FIRST COL")
         calc(data, row-1, col)
         calc(data, row-1, col+1)
         calc(data, row, col+1)
@@ -121,7 +116,6 @@ def flash_eval(data: list, row: int, col: int):
 
     # Last col
     if (row > 0 and row < len(data)-1) and col == len(data[0])-1:
-        #print("LAST COL")
         calc(data, row-1, col)
         calc(data, row+1, col)
         calc(data, row+1, col-1)
@@ -130,7 +124,6 @@ def flash_eval(data: list, row: int, col: int):
 
     # The rest
     if (row > 0 and row < len(data)-1) and (col > 0 and col < len(data[0])-1):
-        #print("REST")
         calc(data, row-1, col)
         calc(data, row-1, col+1)
         calc(data, row, col+1)
@@ -139,6 +132,7 @@ def flash_eval(data: list, row: int, col: int):
         calc(data, row+1, col-1)
         calc(data, row, col-1)
         calc(data, row-1, col-1)
+
 
 def check_data(data: list):
     for row, d in enumerate(data):
@@ -155,7 +149,6 @@ def check_again(data: list):
             if val > 9:
                 data[row][col] = 0
     return data
-
 
 
 if __name__ == "__main__":
