@@ -5,6 +5,7 @@ import (
 	"os"
 	"bufio"
 	"strconv"
+	"sort"
 )
 
 func check(err error) {
@@ -21,19 +22,9 @@ func sum(data []int) int {
 	return sum;
 }
 
-func find_max(values []int) int {
-	max := values[0]
-	for _, v := range values {
-		if (v > max) {
-			max = v
-		}
-	}
-	return max
-}
-
 func read_file(){
-	path := "/home/looten/workspace/advent_of_code/2022/input_data.txt"
-	// path := "/home/looten/workspace/advent_of_code/2022/test_data.txt"
+	path := "/home/looten/workspace/advent_of_code/2022/day1/input_data.txt"
+	// path := "/home/looten/workspace/advent_of_code/2022/day1/test_data.txt"
 	file, err := os.Open(path)
 	check(err)
 
@@ -42,7 +33,6 @@ func read_file(){
     
 	var values []int
 	var tmp []int
-	//idx := 0
     for scanner.Scan() {
 		str := scanner.Text()
 		if len(str) > 0 {
@@ -59,7 +49,16 @@ func read_file(){
 			tmp = nil
 		}
     }
-	fmt.Println(find_max(values))
+
+	sort.Slice(values, func(i, j int) bool {
+		return values[i] > values[j]
+	})
+
+	tot := 0
+	for _, v := range values[0:3] {
+		tot += v
+	}
+	fmt.Println(tot)
 }
 
 func main(){
