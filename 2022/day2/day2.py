@@ -9,54 +9,52 @@ paper = 2
 scissors = 3
 
 def readinput():
-    tot_opp = 0
     tot_me = 0
     with open(input_file, "r") as f:
         data = f.readlines()
-        print(data)
+        #print(data)
         for line in data:
             opp, me = line.split(" ")
-            opp_score, me_score = calc(opp, me)
-            print("give me: ", me_score)    
-            tot_opp += opp_score
+            me_score = calc(opp, me)
+            #print("give me: ", me_score)    
             tot_me += me_score
     print("me: ", tot_me)
 
 def calc(opp, me):
     # rock
     if "A" in opp:
-        # rock 
+        # need to lose 
         if "X" in me:
-            return draw + rock, draw + rock
-        # paper
+            return loss + scissors
+        # need to draw
         if "Y" in me:
-            return loss + rock, win + paper
-        # scissors
+            return draw + rock
+        # need to win
         if "Z" in me:
-            return win + rock, loss + scissors
+            return win + paper
     # paper
     if "B" in opp:
-        # rock 
+        # need to lose 
         if "X" in me:
-            return win + paper, loss + rock
-        # paper
+            return loss + rock
+        # need to draw
         if "Y" in me:
-            return draw + paper, draw + paper
-        # scissors
+            return draw + paper
+        # need to win
         if "Z" in me:
-            return loss + paper, win + scissors
+            return win + scissors
 
     # scissors
     if "C" in opp:
-        # rock 
+        # need to lose 
         if "X" in me:
-            return loss + scissors, win + rock
-        # paper
+            return loss + paper
+        # need to draw
         if "Y" in me:
-            return win + scissors, loss + paper
-        # scissors
+            return draw + scissors
+        # need to win
         if "Z" in me:
-            return draw + scissors, draw + scissors
+            return win + rock
         
     print("ERROR: Should not be here: opp", opp)
     print("ERROR: Should not be here: me", me)
