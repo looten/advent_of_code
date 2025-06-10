@@ -22,57 +22,64 @@ def read_input(filename):
 
 def check_updates(rules, updates):
     sum = 0
-    complete = True
     update_idx = []
+    cnt = 0
     for update in updates:
-        for rule in rules:
-            #print(rule)
-            if any(x in rule.keys() for x in update) and any(x in rule.values() for x in update):
-                #print(f"u {update} r {rule}")
-                prev_data = []
-                complete = False
-                while not complete:
-                    for u in update:
-                        prev_data.append(u)
-                        #print("u ", u)
-                        #print("rule.keys() ", rule.keys())
-                        #print("u in rule.keys() ", u in rule.keys())
-                        #print("rule.values()  ", list(rule.values() ))
-                        #print("prev_data ", prev_data)
-                        #print("rule.values() in prev_data ", any(p in list(rule.values()) for p in prev_data))
-                        check_p = any(p in list(rule.values()) for p in prev_data)
-                        if u in rule.keys() and check_p:
-                            print("broke rule!")
-                            print(update)
-                            print(rule)
-                            idx1 = update.index(list(rule.keys())[0])
-                            idx2 = update.index(list(rule.values())[0])
-                            tmp = update[idx1]
-                            update[idx1] = update[idx2]
-                            update[idx2] = tmp
-                            print("after swap")
-                            print(update)
-                            broken_rule = True
-                            update_idx.append(cnt)
-                            #break
-                        else:
-                            complete = True
+        print("\n")
+        recheck_rules = True
+        while recheck_rules:
+            recheck_rules = False
+            for rule in rules:
+                if any(x in rule.keys() for x in update) and any(x in rule.values() for x in update):
+                    #print(f"u {update} r {rule}")
+                    complete = False
+                    while not complete:
+                        prev_data = []
+                        for u in update:
+                            prev_data.append(u)
+                            #print("prev_data ", prev_data)
+                            #print("u ", u)
+                            #print("rule.keys() ", rule.keys())
+                            #print("u in rule.keys() ", u in rule.keys())
+                            #print("rule.values()  ", list(rule.values() ))
+                            #print("prev_data ", prev_data)
+                            #print("rule.values() in prev_data ", any(p in list(rule.values()) for p in prev_data))
+                            check_p = any(p in list(rule.values()) for p in prev_data)
+                            if u in rule.keys() and check_p:
+                                #print("broke rule!")
+                                #print(update)
+                                #print(rule)
+                                idx1 = update.index(list(rule.keys())[0])
+                                idx2 = update.index(list(rule.values())[0])
+                                tmp = update[idx1]
+                                update[idx1] = update[idx2]
+                                update[idx2] = tmp
+                                #print("after swap")
+                                #print(update)
+                                recheck_rules = True
+                                update_idx.append(cnt)
+                                #break
+                            else:
+                                complete = True
         cnt+=1
-
-    for idx in update_idx:
-        #if broken_rule:
-        middle = update[len(update[idx]) // 2]
-        #print(middle)
-        #print mid_indx
-        print("middle")
-        print(middle)
-        sum += middle
+    for i in range(len(updates)):
+        if i not in update_idx:
+            continue
+        else:
+            #if broken_rule:
+            update = updates[i]
+            middle = update[len(update) // 2]
+            #print(middle)
+            #print mid_indx
+            print("middle")
+            print(middle)
+            sum += middle
     print(sum)
 
 
 if __name__ == "__main__":
     filename = "sample_input.txt"
-    #filename = "input.txt"
+    filename = "input.txt"
     rules, updates = read_input(filename)
     #print(rules)
    # print(updates)
