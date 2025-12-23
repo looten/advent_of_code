@@ -17,37 +17,30 @@ def read_input(filename):
 
 def decode(data):
     answer = 0
+    K = 12
     for d in data:
         print(d)
+        n = len(d)
         tmp = []
         for idx, i in enumerate(d):
-            #print(f"start idx: {idx}, i: {i}, tmp {tmp} len tmp {len(tmp)}  len(d) - (idx + 1): {len(d) - (idx + 1)}")
-            if len(tmp) < 12:
-                tmp.append(i)
-                #print(f"start tmp {tmp}")
-                #if len(tmp) > 1:
-                   # print(f"{len(d) - ((idx + 1) ) > 5 } ({len(d) - ( ((idx + 1)))}) {len(tmp) >=2} { tmp[-1] > tmp[-2]}")
-              #  if idx < 7 and len(d) - (idx + 1) >= 6 and len(tmp) >=2 and tmp[-1] > tmp[-2]:
-                if len(d) - ((idx + 1)) > 12-len(tmp) and len(tmp) >=2 and tmp[-1] > tmp[-2]:
-                    new_first = tmp[-1]
-                    tmp.pop()
-                    tmp.pop()
-                    tmp.append(new_first)
-                    print(f"swapped idx: {idx}, i: {i}, tmp {tmp} len tmp {len(tmp)}")
-
-            elif i > tmp[-1]:
+            rem = n - idx
+            while tmp and i > tmp[-1] and len(tmp) - 1 + rem >= K:
                 tmp.pop()
+            if len(tmp) < K:
                 tmp.append(i)
+
         t_str = ""
         for t in tmp:
             t_str += str(t)
         print("len tmp:", len(t_str))
+        if len(t_str) != 12:
+            exit("ERROR LENGTH NOT 12")
         print(t_str)
         answer += int(str(t_str))
     print(f"Answer: {answer}")
 
 if __name__ == "__main__":
     filename = "sample_input.txt"
-    #filename = "input.txt"
+    filename = "input.txt"
     data = read_input(filename)
     decode(data)
