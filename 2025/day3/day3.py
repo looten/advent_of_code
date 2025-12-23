@@ -21,14 +21,14 @@ def decode(data):
         print(d)
         tmp = []
         for idx, i in enumerate(d):
-            print(f"start idx: {idx}, i: {i}, tmp {tmp} len tmp {len(tmp)}  len(d) - (idx + 1): {len(d) - (idx + 1)}")
+            #print(f"start idx: {idx}, i: {i}, tmp {tmp} len tmp {len(tmp)}  len(d) - (idx + 1): {len(d) - (idx + 1)}")
             if len(tmp) < 12:
                 tmp.append(i)
-                print(f"start tmp {tmp}")
-                if len(tmp) > 1:
-                    print(f"{len(d) - (idx + 1 + len(tmp)) > 6 } {len(tmp) >=2} { tmp[-1] > tmp[-2]}")
+                #print(f"start tmp {tmp}")
+                #if len(tmp) > 1:
+                   # print(f"{len(d) - ((idx + 1) ) > 5 } ({len(d) - ( ((idx + 1)))}) {len(tmp) >=2} { tmp[-1] > tmp[-2]}")
               #  if idx < 7 and len(d) - (idx + 1) >= 6 and len(tmp) >=2 and tmp[-1] > tmp[-2]:
-                if len(d) - (idx + 1 + len(tmp)) > 6 and len(tmp) >=2 and tmp[-1] > tmp[-2]:
+                if len(d) - ((idx + 1)) > 12-len(tmp) and len(tmp) >=2 and tmp[-1] > tmp[-2]:
                     new_first = tmp[-1]
                     tmp.pop()
                     tmp.pop()
